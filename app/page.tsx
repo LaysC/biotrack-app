@@ -1,10 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { auth } from "@/lib/firebase";
 import { 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
-  sendPasswordResetEmail 
+  sendPasswordResetEmail,
+  onAuthStateChanged // <-- NOVA FUNÇÃO AQUI
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { Apple, Loader2, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
@@ -17,6 +18,16 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false); 
   const router = useRouter();
+
+  // GUARDA-COSTAS DA ROTA: Se já tiver logado, manda pro Dashboard
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.push("/dashboard");
+      }
+    });
+    return () => unsub();
+  }, [router]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,7 +117,6 @@ export default function LoginPage() {
                 value={password}
                 required
               />
-              {/* Botão de Senha Simplificado */}
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
@@ -118,7 +128,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* CAMPO EXTRA PARA CADASTRO */}
           {isRegister && (
             <div className="space-y-1 animate-in fade-in slide-in-from-top-2 duration-300">
               <label htmlFor="confirmPassword" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Confirmar Senha</label>
