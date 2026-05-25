@@ -1,11 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import { auth } from "@/lib/firebase";
-import { 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
   sendPasswordResetEmail,
-  onAuthStateChanged // <-- NOVA FUNÇÃO AQUI
+  onAuthStateChanged,
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { Apple, Loader2, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
@@ -16,27 +16,25 @@ export default function LoginPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isRegister, setIsRegister] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); 
+  const [checking, setChecking] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  // GUARDA-COSTAS DA ROTA: Se já tiver logado, manda pro Dashboard
+  // Se já estiver logado, manda pro dashboard direto
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.push("/dashboard");
-      }
+      if (user) router.replace("/dashboard");
+      else setChecking(false);
     });
     return () => unsub();
   }, [router]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (isRegister && password !== confirmPassword) {
       alert("As senhas não coincidem!");
       return;
     }
-
     setLoading(true);
     try {
       if (isRegister) {
@@ -50,147 +48,152 @@ export default function LoginPage() {
         router.push("/dashboard");
       }
     } catch (error: any) {
-      alert("Erro na autenticação: " + error.message);
+      alert("Erro: " + error.message);
     } finally {
       setLoading(false);
     }
   };
 
   const handleForgotPassword = async () => {
-    if (!email) {
-      alert("Por favor, digite seu e-mail no campo acima primeiro.");
-      return;
-    }
+    if (!email) { alert("Digite seu e-mail primeiro."); return; }
     try {
       await sendPasswordResetEmail(auth, email);
-      alert("E-mail de recuperação enviado! Verifique sua caixa de entrada.");
+      alert("E-mail de recuperação enviado!");
     } catch (error: any) {
-      alert("Erro ao enviar e-mail: " + error.message);
+      alert("Erro: " + error.message);
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
-  };
+  if (checking) return (
+    <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="text-zinc-600 text-sm animate-pulse">Carregando...</div>
+    </div>
+  );
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-emerald-50/30 p-4 font-sans">
-      <div className="bg-white p-8 rounded-[2.5rem] shadow-2xl shadow-emerald-900/5 w-full max-w-md border border-slate-100">
-        
+    <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4">
+      {/* Glow de fundo */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 h-96 w-96 rounded-full bg-emerald-500/5 blur-3xl" />
+      </div>
+
+      <div className="relative w-full max-w-sm">
+        {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="bg-emerald-600 p-3 rounded-2xl text-white shadow-lg shadow-emerald-200 mb-4">
-            <Apple size={32} />
+          <div className="grid h-14 w-14 place-items-center rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mb-4">
+            <Apple size={28} />
           </div>
-          <h1 className="text-3xl font-black text-slate-800 tracking-tight">BioTrack</h1>
-          <p className="text-slate-400 text-sm font-medium mt-1 text-center">
-            {isRegister ? "Crie sua conta preenchendo os dados abaixo" : "Acompanhe sua saúde com inteligência"}
+          <h1 className="text-2xl font-black text-zinc-100 tracking-tight">BioTrack</h1>
+          <p className="text-zinc-600 text-xs font-medium mt-1 text-center">
+            {isRegister ? "Crie sua conta" : "Acompanhe calorias e jejum"}
           </p>
         </div>
 
-        <form onSubmit={handleAuth} className="space-y-4">
-          <div className="space-y-1">
-            <label htmlFor="email" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">E-mail</label>
-            <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
-              <input
-                id="email"
-                type="email"
-                placeholder="exemplo@email.com"
-                className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:bg-white transition-all text-sm"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-                required
-              />
-            </div>
-          </div>
+        {/* Card */}
+        <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl">
+          <form onSubmit={handleAuth} className="space-y-3">
 
-          <div className="space-y-1">
-            <label htmlFor="password" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Senha</label>
-            <div className="relative flex items-center">
-              <Lock className="absolute left-4 text-slate-300 pointer-events-none" size={18} />
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
-                className="w-full pl-12 pr-14 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:bg-white transition-all text-sm"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-                required
-              />
-              <button
-                type="button"
-                onClick={togglePasswordVisibility}
-                className="absolute right-3 p-2 rounded-xl text-slate-400 hover:text-emerald-600 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-                title={showPassword ? "Ocultar senha" : "Mostrar senha"}
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-          </div>
-
-          {isRegister && (
-            <div className="space-y-1 animate-in fade-in slide-in-from-top-2 duration-300">
-              <label htmlFor="confirmPassword" className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Confirmar Senha</label>
+            {/* E-mail */}
+            <div>
+              <label htmlFor="email" className="block text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-1.5">
+                E-mail
+              </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600" size={15} />
                 <input
-                  id="confirmPassword"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-100 rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500/20 focus:bg-white transition-all text-sm"
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  value={confirmPassword}
-                  required={isRegister}
+                  id="email"
+                  type="email"
+                  placeholder="exemplo@email.com"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  required
+                  className="w-full pl-9 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition text-sm text-zinc-200 placeholder:text-zinc-600"
                 />
               </div>
             </div>
-          )}
 
-          {!isRegister && (
-            <div className="text-right">
-              <button 
-                type="button" 
-                onClick={handleForgotPassword} 
-                className="text-[10px] font-bold text-slate-400 hover:text-emerald-600 uppercase tracking-tighter transition"
-              >
-                Esqueceu a senha?
-              </button>
+            {/* Senha */}
+            <div>
+              <label htmlFor="password" className="block text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-1.5">
+                Senha
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 pointer-events-none" size={15} />
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                  className="w-full pl-9 pr-10 py-3 bg-zinc-800 border border-zinc-700 rounded-xl outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition text-sm text-zinc-200 placeholder:text-zinc-600"
+                />
+                <button type="button" onClick={() => setShowPassword(p => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-400 transition">
+                  {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                </button>
+              </div>
             </div>
-          )}
 
-          <button 
-            type="submit"
-            disabled={loading}
-            className={`w-full flex items-center justify-center gap-2 text-white py-4 rounded-2xl font-bold transition-all shadow-xl hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 mt-2 ${
-              isRegister ? "bg-emerald-600 shadow-emerald-200 hover:bg-emerald-700" : "bg-slate-900 shadow-slate-200 hover:bg-slate-800"
-            }`}
-          >
-            {loading ? <Loader2 className="animate-spin" size={20} /> : (
-              <>
-                {isRegister ? "Criar Minha Conta" : "Entrar no BioTrack"}
-                <ArrowRight size={18} />
-              </>
+            {/* Confirmar senha (só no cadastro) */}
+            {isRegister && (
+              <div>
+                <label htmlFor="confirmPassword" className="block text-[10px] font-bold uppercase tracking-widest text-zinc-600 mb-1.5">
+                  Confirmar senha
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-600 pointer-events-none" size={15} />
+                  <input
+                    id="confirmPassword"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}
+                    required={isRegister}
+                    className="w-full pl-9 pr-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition text-sm text-zinc-200 placeholder:text-zinc-600"
+                  />
+                </div>
+              </div>
             )}
-          </button>
-        </form>
 
-        <div className="mt-8 pt-6 border-t border-slate-50 text-center">
-          <button 
-            type="button" 
-            onClick={() => {
-              setIsRegister(!isRegister);
-              setPassword("");
-              setConfirmPassword("");
-            }} 
-            className="text-sm font-bold text-slate-500 hover:text-emerald-600 transition"
-          >
-            {isRegister ? "Já possui uma conta? Faça login" : "Não tem conta? Registre-se gratuitamente"}
-          </button>
+            {/* Esqueceu a senha */}
+            {!isRegister && (
+              <div className="text-right">
+                <button type="button" onClick={handleForgotPassword}
+                  className="text-[10px] font-bold text-zinc-600 hover:text-emerald-400 uppercase tracking-wider transition">
+                  Esqueceu a senha?
+                </button>
+              </div>
+            )}
+
+            {/* Botão principal */}
+            <button type="submit" disabled={loading}
+              className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-50 mt-1 ${
+                isRegister
+                  ? "bg-emerald-500 text-white hover:bg-emerald-600"
+                  : "bg-zinc-100 text-zinc-900 hover:bg-white"
+              }`}>
+              {loading
+                ? <Loader2 className="animate-spin" size={18} />
+                : <>{isRegister ? "Criar conta" : "Entrar"} <ArrowRight size={16} /></>
+              }
+            </button>
+          </form>
+
+          {/* Alternar login/cadastro */}
+          <div className="mt-5 pt-4 border-t border-zinc-800 text-center">
+            <button type="button"
+              onClick={() => { setIsRegister(!isRegister); setPassword(""); setConfirmPassword(""); }}
+              className="text-xs font-semibold text-zinc-600 hover:text-emerald-400 transition">
+              {isRegister ? "Já tem conta? Faça login" : "Não tem conta? Cadastre-se"}
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div className="fixed bottom-4 text-[9px] text-slate-400 font-bold uppercase tracking-widest">
-        Trabalho Acadêmico • TSI Senac
+        {/* Aviso ético */}
+        <p className="mt-6 text-center text-[9px] font-bold uppercase tracking-widest text-zinc-800">
+          Aplicação acadêmica · não substitui orientação médica
+        </p>
       </div>
     </div>
   );
