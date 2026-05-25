@@ -1,31 +1,38 @@
+````bash
 # 🥗 BioTrack — Registro de Calorias e Jejum Intermitente
 
-Aplicação web full-stack para acompanhamento de consumo calórico e jejum intermitente. Permite registrar refeições, definir metas diárias, acompanhar ciclos de jejum e visualizar progresso semanal.
+Aplicação web full-stack desenvolvida para acompanhamento de consumo calórico e controle de jejum intermitente. O sistema permite registrar refeições, definir metas diárias, acompanhar ciclos de jejum em tempo real e visualizar estatísticas semanais de forma intuitiva.
 
-> ⚠️ **Aviso:** Esta aplicação é um exercício acadêmico e **não substitui orientação médica ou nutricional.**
-
----
-
-## 🔗 Deploy
-
-**URL em produção:** `https://SEU-PROJETO.vercel.app` ← substitua após o deploy
+> ⚠️ Esta aplicação foi desenvolvida para fins acadêmicos e não substitui orientação médica ou nutricional profissional.
 
 ---
 
-## 🖼️ Screenshots
+# 🔗 Deploy
 
-> Adicione screenshots das telas principais aqui após o deploy.
+🌐 https://biotrack-app-theta.vercel.app?_vercel_share=rOchxbs5txhB9hwoPop1aGNOm5cZrznY
 
 ---
 
-## 🛠️ Stack
+# 🖼️ Screenshots
+
+## 🔐 Tela de Login
+
+![Tela de Login](./app/assets/logi.png)
+
+## 📊 Dashboard
+
+![Dashboard](./app/assets/Tlinicial.png)
+
+---
+
+# 🛠️ Tecnologias Utilizadas
 
 | Camada | Tecnologia |
 |---|---|
 | Framework | Next.js 16 (App Router) |
 | Linguagem | TypeScript |
 | Autenticação | Firebase Authentication |
-| Banco de dados | Firestore (Firebase) |
+| Banco de Dados | Firestore (Firebase) |
 | Estilização | Tailwind CSS v4 |
 | Gráficos | Recharts |
 | Ícones | Lucide React |
@@ -33,50 +40,77 @@ Aplicação web full-stack para acompanhamento de consumo calórico e jejum inte
 
 ---
 
-## ✅ Funcionalidades
+# ✅ Funcionalidades
 
-- **Autenticação:** cadastro, login, logout e recuperação de senha
-- **Rotas protegidas:** redirecionamento automático para login se não autenticado
-- **Refeições (CRUD completo):** criar, listar com filtro por data, editar e excluir com confirmação
-- **Meta calórica:** definir e editar a qualquer momento, barra de progresso com cor dinâmica
-- **Jejum intermitente:** iniciar/encerrar com timer em tempo real, protocolos 14:10, 16:8, 18:6, 20:4, 24h e personalizado
-- **Histórico de jejuns:** listagem dos jejuns concluídos
-- **Resumo semanal:** gráfico de calorias e gráfico de horas de jejum dos últimos 7 dias
-- **Indicadores agregados:** média diária de calorias, total de jejuns e tempo médio de jejum na semana
-- **Responsivo:** funciona em mobile e desktop
+## 🔐 Autenticação
+- Cadastro de usuários
+- Login e logout
+- Recuperação de senha
+- Proteção de rotas privadas
+
+## 🍽️ Controle Alimentar
+- Cadastro de refeições
+- Edição e exclusão de registros
+- Filtro por data
+- Controle de calorias consumidas
+
+## 🎯 Meta Calórica
+- Definição de meta diária personalizada
+- Barra de progresso dinâmica
+- Indicadores visuais de consumo
+
+## ⏳ Jejum Intermitente
+- Início e encerramento de jejum em tempo real
+- Protocolos prontos:
+  - 14:10
+  - 16:8
+  - 18:6
+  - 20:4
+  - 24h
+  - Personalizado
+
+## 📈 Estatísticas
+- Histórico de jejuns concluídos
+- Gráfico semanal de calorias
+- Gráfico semanal de horas em jejum
+- Média diária de calorias
+- Tempo médio de jejum semanal
+
+## 📱 Responsividade
+- Compatível com dispositivos mobile e desktop
 
 ---
 
-## 📦 Setup local
+# 📦 Instalação Local
 
-### Pré-requisitos
+## Pré-requisitos
 
 - Node.js 18+
 - npm ou yarn
-- Conta no [Firebase](https://firebase.google.com)
+- Conta no Firebase
 
-### 1. Clone o repositório
+---
+
+## 1️⃣ Clone o repositório
 
 ```bash
 git clone https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
 cd SEU_REPOSITORIO
 ```
 
-### 2. Instale as dependências
+---
+
+## 2️⃣ Instale as dependências
 
 ```bash
 npm install
 ```
 
-### 3. Configure as variáveis de ambiente
+---
 
-Copie o arquivo de exemplo e preencha com suas credenciais do Firebase:
+## 3️⃣ Configure as variáveis de ambiente
 
-```bash
-cp .env.example .env.local
-```
-
-Edite o `.env.local`:
+Crie um arquivo `.env.local` na raiz do projeto:
 
 ```env
 NEXT_PUBLIC_FIREBASE_API_KEY=sua_api_key
@@ -87,46 +121,58 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=seu_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=seu_app_id
 ```
 
-> Encontre esses valores em: [Firebase Console](https://console.firebase.google.com) → seu projeto → ⚙️ Configurações → Seus apps
+---
 
-### 4. Configure o Firebase
+## 4️⃣ Configure o Firebase
 
-No Firebase Console, ative:
-- **Authentication** → método de login por **E-mail/senha**
-- **Firestore Database** → crie um banco no modo de produção
+### Authentication
+Ative:
+- Login com E-mail e Senha
 
-### 5. Rode o projeto
+### Firestore Database
+- Crie um banco no modo de produção
+
+---
+
+## 5️⃣ Execute o projeto
 
 ```bash
 npm run dev
 ```
 
-Acesse [http://localhost:3000](http://localhost:3000)
+Acesse:
+```txt
+http://localhost:3000
+```
 
 ---
 
-## 🌍 Variáveis de ambiente necessárias
+# 🌍 Variáveis de Ambiente
 
 | Variável | Descrição |
 |---|---|
-| `NEXT_PUBLIC_FIREBASE_API_KEY` | Chave de API do Firebase |
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | API Key do Firebase |
 | `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Domínio de autenticação |
 | `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | ID do projeto |
-| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Bucket de storage |
-| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | ID do sender |
-| `NEXT_PUBLIC_FIREBASE_APP_ID` | ID do app |
+| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Bucket de armazenamento |
+| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Sender ID |
+| `NEXT_PUBLIC_FIREBASE_APP_ID` | ID da aplicação |
 
 ---
 
-## 🚀 Deploy na Vercel
+# 🚀 Deploy na Vercel
 
-1. Faça push do repositório para o GitHub
-2. Acesse [vercel.com](https://vercel.com) e importe o repositório
-3. Em **Environment Variables**, adicione todas as variáveis do `.env.example` com seus valores reais
-4. Clique em **Deploy**
+1. Faça push do projeto no GitHub
+2. Acesse a Vercel
+3. Importe o repositório
+4. Configure as variáveis de ambiente
+5. Clique em Deploy
 
 ---
 
-## 👤 Autor
+# 👩‍💻 Autor
 
-Desenvolvido como trabalho final da disciplina — TSI Senac
+Projeto desenvolvido como trabalho final da disciplina de TSI — Senac.
+
+Desenvolvido por Lais Carvalho 💚
+````
