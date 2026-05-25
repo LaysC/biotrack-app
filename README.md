@@ -1,4 +1,3 @@
-````bash
 # 🥗 BioTrack — Registro de Calorias e Jejum Intermitente
 
 Aplicação web full-stack desenvolvida para acompanhamento de consumo calórico e controle de jejum intermitente. O sistema permite registrar refeições, definir metas diárias, acompanhar ciclos de jejum em tempo real e visualizar estatísticas semanais de forma intuitiva.
@@ -10,6 +9,12 @@ Aplicação web full-stack desenvolvida para acompanhamento de consumo calórico
 # 🔗 Deploy
 
 🌐 https://biotrack-app-theta.vercel.app?_vercel_share=rOchxbs5txhB9hwoPop1aGNOm5cZrznY
+
+---
+
+# 🎥 Demonstração em Vídeo
+
+📺 https://youtu.be/5O9xk4iF1Cc
 
 ---
 
@@ -175,4 +180,3 @@ http://localhost:3000
 Projeto desenvolvido como trabalho final da disciplina de TSI — Senac.
 
 Desenvolvido por Lais Carvalho 💚
-````
